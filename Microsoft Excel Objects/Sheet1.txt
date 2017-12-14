@@ -1,0 +1,159 @@
+Option Explicit
+
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+         'check cells for desired format to trigger the calendarfrm.show routine
+         'otherwise exit the sub
+        Dim DateFormats, DF
+        DateFormats = Array("m/d/yy;@", "mmmm d yyyy")
+        For Each DF In DateFormats
+            If DF = Target.NumberFormat Then
+                If CalendarFrm.HelpLabel.Caption <> "" Then
+                    CalendarFrm.Height = 191 + CalendarFrm.HelpLabel.Height
+                Else: CalendarFrm.Height = 191
+                    CalendarFrm.Show
+                End If
+            End If
+        Next
+    End Sub
+
+Sub Button34_Click() 'Add Sheet Button
+
+    'Declaration
+        Dim lastRow As Long 'last row on sheet
+        Dim newRow As Long
+
+    'Get last row used
+        lastRow = Cells.Find(What:="*", _
+                        After:=Range("A1"), _
+                        LookAt:=xlPart, _
+                        LookIn:=xlFormulas, _
+                        SearchOrder:=xlByRows, _
+                        SearchDirection:=xlPrevious, _
+                        MatchCase:=False).Row
+        newRow = (lastRow + 1)
+
+    'Merge Cells
+        Range(Cells(newRow, 2), Cells(newRow, 10)).UnMerge
+        Range(Cells(newRow, 2), Cells(newRow, 4)).Merge
+        Range(Cells(newRow, 5), Cells(newRow, 6)).Merge
+        Range(Cells(newRow, 7), Cells(newRow, 8)).Merge
+        Range(Cells(newRow, 9), Cells(newRow, 10)).Merge
+
+    'Change Cell Sizes
+        Rows(newRow).RowHeight = 50
+
+    'Alignment
+        Range(Cells(newRow, 2), Cells(newRow, 11)).HorizontalAlignment = xlCenter
+        Range(Cells(newRow, 2), Cells(newRow, 11)).VerticalAlignment = xlVAlignCenter
+
+    'Format Cell Value
+        Cells(newRow, 2).NumberFormat = "mmmm d yyyy"
+        Cells(newRow, 2).Value = "-"
+        Cells(newRow, 5).Value = "-"
+        Cells(newRow, 7).Value = "-"
+        Cells(newRow, 9).Value = "-"
+        Cells(newRow, 11).Value = "-"
+
+    'Format Cells Color
+        Range(Cells(newRow, 2), Cells(newRow, 11)).Interior.Color = RGB(51, 51, 51)
+        Cells(newRow, 2).Font.Color = RGB(217, 217, 217)
+        Cells(newRow, 5).Font.Color = RGB(83, 219, 126)
+        Cells(newRow, 7).Font.Color = RGB(255, 126, 121)
+        Cells(newRow, 9).Font.Color = RGB(0, 176, 240)
+        Cells(newRow, 11).Font.Color = RGB(217, 217, 217)
+
+End Sub
+
+
+Sub Button35_Click() 'Delete Sheet Button
+
+    'Declarations
+        Dim Answer As Integer
+        Dim rowNum As Long
+
+    'Confirm Selection
+        Answer = MsgBox("Are you sure you wish to delete this record?", vbYesNo + vbExclamation + vbDefaultButton2, "Delete Confirmation")
+        If Answer = vbYes Then
+            If ActiveCell.Row > 35 Then
+                Rows(ActiveCell.Row).EntireRow.Delete
+            Else
+                MsgBox "Row not in Financial Planner range, please try again!"
+            End If
+        Else
+             Exit Sub 'Do not delete row
+        End If
+
+Exit_btnDeleteRecord_Click:
+            Exit Sub
+
+Err_btnDeleteRecord_Click:
+            MsgBox Err.Description
+            Resume Exit_btnDeleteRecord_Click
+
+End Sub
+
+Sub Button36_Click() 'Sort Button
+
+    'Declaration
+        Dim lastRow As Long 'last row on sheet
+        Dim ws As Worksheet 'Metrics worksheet variable
+        Dim balance As Double 'value of balance
+        Dim Row As Long 'Loop control
+
+    'Get last row used
+        lastRow = Cells.Find(What:="*", _
+            After:=Range("A1"), _
+            LookAt:=xlPart, _
+            LookIn:=xlFormulas, _
+            SearchOrder:=xlByRows, _
+            SearchDirection:=xlPrevious, _
+            MatchCase:=False).Row
+
+
+    'Sort Sheet By Date
+        Set ws = ActiveWorkbook.Worksheets("Metrics")
+        With ws.Sort.SortFields
+            .Clear
+            .Add Key:=ws.Range("B36:B" & lastRow), SortOn:=xlSortOnValues, _
+                 Order:=xlAscending, DataOption:=xlSortNormal
+        End With
+        With ws.Sort
+            .SetRange ws.Range("A36:K" & lastRow)
+            .Header = xlNo
+            .MatchCase = False
+            .Orientation = xlTopToBottom
+            .SortMethod = xlPinYin
+            .Apply
+        End With
+
+    'If No Values, Exit
+        If lastRow <= 35 Then
+            Exit Sub
+        End If
+
+    'Calculate balance for first cell
+        balance = ws.Range("J2").Value
+        If ws.Range("E36") <> "-" Then
+            balance = (balance + ws.Range("E36"))
+        End If
+        If ws.Range("G36") <> "-" Then
+            balance = (balance - ws.Range("G36"))
+        End If
+        ws.Range("I36").Value = balance 'Print value
+
+    'If more than one cell, calculate remaining
+        If lastRow >= 37 Then 'If more rows to calculate, enter loop
+
+             For Row = 37 To lastRow 'For remaining Rows calculate balance
+                    If ws.Range("E" & Row) <> "-" Then
+                        balance = (balance + ws.Range("E" & Row))
+                    End If
+                    If ws.Range("G" & Row) <> "-" Then
+                        balance = (balance - ws.Range("G" & Row))
+                    End If
+                    ws.Range("I" & Row).Value = balance 'Print value
+             Next Row
+
+        End If
+
+End Sub

@@ -1,0 +1,256 @@
+Option Explicit
+
+'Global Variables
+Dim lastJ7 As String
+
+Private Sub Workbook_SheetChange(ByVal Sh As Object, ByVal Target As Range) 'Any change on sheet triggers this main macro
+
+    'Dropdown list macro launch
+    'If the view dropdown is changed then a sub routine will be triggered to make the appropriate changes
+    'Declarations
+    Dim monthsBack As Integer
+
+    '1 Month View
+     If Range("J7") = "1 MONTH" And lastJ7 <> "1 MONTH" Then
+        monthsBack = 1
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+     '2 Month View
+     If Range("J7") = "2 MONTHS" And lastJ7 <> "2 MONTHS" Then
+        monthsBack = 2
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+     '3 Month View
+     If Range("J7") = "3 MONTHS" And lastJ7 <> "3 MONTHS" Then
+        monthsBack = 3
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+    '4 Month View
+     If Range("J7") = "4 MONTHS" And lastJ7 <> "4 MONTHS" Then
+        monthsBack = 4
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+     '5 Month View
+     If Range("J7") = "5 MONTHS" And lastJ7 <> "5 MONTHS" Then
+        monthsBack = 5
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+      '6 Month View
+     If Range("J7") = "6 MONTHS" And lastJ7 <> "6 MONTHS" Then
+        monthsBack = 6
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+      '7 Month View
+     If Range("J7") = "7 MONTHS" And lastJ7 <> "7 MONTHS" Then
+        monthsBack = 7
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+      '8 Month View
+     If Range("J7") = "8 MONTHS" And lastJ7 <> "8 MONTHS" Then
+        monthsBack = 8
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+      '9 Month View
+     If Range("J7") = "9 MONTHS" And lastJ7 <> "9 MONTHS" Then
+        monthsBack = 9
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+      '4 Month View
+     If Range("J7") = "10 MONTHS" And lastJ7 <> "10 MONTHS" Then
+        monthsBack = 10
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+      '11 Month View
+     If Range("J7") = "11 MONTHS" And lastJ7 <> "11 MONTHS" Then
+        monthsBack = 11
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+      '1 YEAR View
+     If Range("J7") = "1 YEAR" And lastJ7 <> "1 YEAR" Then
+        monthsBack = 12
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+      '2 YEARS View
+     If Range("J7") = "2 YEARS " And lastJ7 <> "2 YEARS " Then
+       MsgBox "2 Years"
+        monthsBack = 24
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+      'ALL TIME View
+     If Range("J7") = "ALL TIME " And lastJ7 <> "ALL TIME " Then
+        MsgBox "All Time"
+        monthsBack = 120 '10 years is considered all time for this program
+        Call ConfigureSheet(monthsBack)
+        'Ensure range is changed before re-running macro
+        lastJ7 = Range("J7").Value 'Set new value of J7 for next event
+     End If
+
+End Sub
+
+Sub ConfigureSheet(ByVal monthsBack As Integer)
+
+    'Universal Declarations
+    Dim Metrics As Worksheet
+        Set Metrics = Worksheets("Metrics")
+    Dim dateColumn As Long 'Column date variables are stored in on the sheets
+        dateColumn = 2 'Represents column B when in Cells() format
+    Dim expendColumn As Long 'Column that represents the ammount of expenditure
+        expendColumn = 4 'Represents column D when in Cells() format
+    Dim incomeColumn As Long 'Column that represents the ammount of expenditure
+        incomeColumn = 5 'Represents column E when in Cells() format
+    Dim categoryColumn As Long
+        categoryColumn = 7
+
+    'Formula Variables
+    Dim Category As Variant
+    Dim CategoryStr As String
+    Dim i As Integer
+    Dim j As Integer
+
+    'Chequing Account Sheet Declarations
+    Dim cheqExpendRng As Range 'Stores range of expenditure values of transfers with valid dates
+    Dim cheqIncomeRng As Range 'Stores range of income values of transfers with valid dates
+    Dim cheqCategoryRng As Range 'Stores range of category values of transfers with valid dates
+    Dim cheqWS As Worksheet
+        Set cheqWS = Worksheets("Chequing Account")
+    Dim cheqExpendStr As String
+    Dim cheqIncomeStr As String
+    Dim cheqCategoryStr As String
+
+    'Savings Account Sheet Declarations
+    Dim saveExpendRng As Range 'Stores range of expenditure values of transfers with valid dates
+    Dim saveIncomeRng As Range 'Stores range of income values of transfers with valid dates
+    Dim saveCategoryRng As Range 'Stores range of category values of transfers with valid dates
+    Dim saveWS As Worksheet
+        Set saveWS = Worksheets("Savings Account")
+    Dim saveExpendStr As String
+    Dim saveIncomeStr As String
+    Dim saveCategoryStr As String
+
+    'Youth Account Sheet Declarations
+    Dim youthExpendRng As Range 'Stores range of expenditure values of transfers with valid dates for Chequing sheet
+    Dim youthIncomeRng As Range 'Stores range of income values of transfers with valid dates for Chequing sheet
+    Dim youthCategoryRng As Range 'Stores range of category values of transfers with valid dates
+    Dim youthWS As Worksheet
+        Set youthWS = Worksheets("Youth Account")
+    Dim youthExpendStr As String
+    Dim youthIncomeStr As String
+    Dim youthCategoryStr As String
+
+    'Credit Card Account Sheet Declarations
+    Dim ccExpendRng As Range 'Stores range of expenditure values of transfers with valid dates for Chequing sheet
+    Dim ccIncomeRng As Range 'Stores range of income values of transfers with valid dates for Chequing sheet
+    Dim ccCategoryRng As Range 'Stores range of category values of transfers with valid dates
+    Dim ccWS As Worksheet
+        Set ccWS = Worksheets("Credit Card Account")
+    Dim ccExpendStr As String
+    Dim ccIncomeStr As String
+    Dim ccCategoryStr As String
+
+    'Get Ranges for each sheet
+    Set cheqExpendRng = FindExpendRange(cheqExpendRng, cheqIncomeRng, cheqCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, cheqWS, monthsBack)
+    Set cheqIncomeRng = FindIncomeRange(cheqExpendRng, cheqIncomeRng, cheqCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, cheqWS, monthsBack)
+    Set cheqCategoryRng = FindCategoryRange(cheqExpendRng, cheqIncomeRng, cheqCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, cheqWS, monthsBack)
+
+    Set saveExpendRng = FindExpendRange(saveExpendRng, saveIncomeRng, saveCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, saveWS, monthsBack)
+    Set saveIncomeRng = FindIncomeRange(saveExpendRng, saveIncomeRng, saveCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, saveWS, monthsBack)
+    Set saveCategoryRng = FindCategoryRange(saveExpendRng, saveIncomeRng, saveCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, saveWS, monthsBack)
+
+    Set youthExpendRng = FindExpendRange(youthExpendRng, youthIncomeRng, youthCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, youthWS, monthsBack)
+    Set youthIncomeRng = FindIncomeRange(youthExpendRng, youthIncomeRng, youthCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, youthWS, monthsBack)
+    Set youthCategoryRng = FindCategoryRange(youthExpendRng, youthIncomeRng, youthCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, youthWS, monthsBack)
+
+    Set ccExpendRng = FindExpendRange(ccExpendRng, ccIncomeRng, ccCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, ccWS, monthsBack)
+    Set ccIncomeRng = FindIncomeRange(ccExpendRng, ccIncomeRng, ccCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, ccWS, monthsBack)
+    Set ccCategoryRng = FindCategoryRange(ccExpendRng, ccIncomeRng, ccCategoryRng, categoryColumn, dateColumn, expendColumn, incomeColumn, ccWS, monthsBack)
+
+    'Assign range address' for formula's
+    cheqExpendStr = cheqExpendRng.Address
+    cheqIncomeStr = cheqIncomeRng.Address
+    cheqCategoryStr = cheqCategoryRng.Address
+
+    saveExpendStr = saveExpendRng.Address
+    saveIncomeStr = saveIncomeRng.Address
+    saveCategoryStr = saveCategoryRng.Address
+
+    youthExpendStr = youthExpendRng.Address
+    youthIncomeStr = youthIncomeRng.Address
+    youthCategoryStr = youthCategoryRng.Address
+
+    ccExpendStr = ccExpendRng.Address
+    ccIncomeStr = ccIncomeRng.Address
+    ccCategoryStr = ccCategoryRng.Address
+
+    'Category Configuration
+    CategoryStr = "JOB,FOOD,HOUSING,TUITION & FEES,BLANK,HEALTH,SPORTS,CLOTHES,PARTYING,TRAVEL,GIFTS,ENTERTAINMENT,PHONE,BLANK,VEHICLE,GAS,EATING OUT,OTHER,BLANK,TRANSFER"
+    Category = Split(CategoryStr, ",")
+
+    'Configure Sheets Formula's
+    Application.EnableEvents = False  'Ensure changes do not trigger an event
+
+    'Sheet Formula's
+    For i = 11 To 30
+        If (i <> 15 And i <> 24 And i <> 29) Then
+        j = i - 11
+
+        'Income Formula's
+        Metrics.Range("F" & i).Value = _
+        "=SUM(" & _
+        "SUMIF('Chequing Account'!" & cheqCategoryStr & "," & Chr(34) & Category(j) & Chr(34) & ",'Chequing Account'!" & cheqIncomeStr & ")," & _
+        "SUMIF('Savings Account'!" & saveCategoryStr & "," & Chr(34) & Category(j) & Chr(34) & ",'Savings Account'!" & saveIncomeStr & ")," & _
+        "SUMIF('Youth Account'!" & youthCategoryStr & "," & Chr(34) & Category(j) & Chr(34) & ",'Youth Account'!" & youthIncomeStr & ")," & _
+        "SUMIF('Credit Card Account'!" & ccCategoryStr & "," & Chr(34) & Category(j) & Chr(34) & ",'Credit Card Account'!" & ccIncomeStr & "))"
+
+        'Expenditure Formula's
+        Metrics.Range("H" & i).Value = _
+        "=SUM(" & _
+        "SUMIF('Chequing Account'!" & cheqCategoryStr & "," & Chr(34) & Category(j) & Chr(34) & ",'Chequing Account'!" & cheqExpendStr & ")," & _
+        "SUMIF('Savings Account'!" & saveCategoryStr & "," & Chr(34) & Category(j) & Chr(34) & ",'Savings Account'!" & saveExpendStr & ")," & _
+        "SUMIF('Youth Account'!" & youthCategoryStr & "," & Chr(34) & Category(j) & Chr(34) & ",'Youth Account'!" & youthExpendStr & ")," & _
+        "SUMIF('Credit Card Account'!" & ccCategoryStr & "," & Chr(34) & Category(j) & Chr(34) & ",'Credit Card Account'!" & ccExpendStr & "))"
+
+       End If
+    Next i
+
+    Application.EnableEvents = True 'Set back to true
+
+End Sub

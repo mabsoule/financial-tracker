@@ -1,0 +1,179 @@
+
+Function FindExpendRange(ByRef expendRng As Range, ByRef incomeRng As Range, ByRef categoryRng As Range, ByVal categoryColumn As Long, ByVal dateColumn As Long, ByVal expendColumn As Long, ByVal incomeColumn As Long, ByRef ws As Worksheet, ByVal monthsBack As Integer) As Range
+
+       'Declarations
+       Dim i As Integer 'Loop increment
+       Dim InRangeCount As Long
+       Dim cellDate As String 'Date each cell contains
+       Dim FirstInRange As Long 'First row transaction that falls into the subs date range
+            FirstInRange = 0 'Initialize for error prevention
+       Dim LastInRange As Long 'Last row transaction that falls into the subs date range
+            LastInRange = 0 'Initialize for error prevention
+       Dim startDate As String 'Sub first date to look at
+       Dim endDate As String 'Sub last date to look at
+       Dim DateArray As Variant 'Stores split string results to form yyyymmdd date format for each transaction
+       Dim lastRow As Long 'Last row that contains a transaction
+
+       'Find range of data with correct date range
+       endDate = Format(Date, "yyyymmdd") 'Reformate to mathamatical version for end date
+       startDate = DateAdd("m", (-1 * monthsBack), Date) 'Subtract one month for start date
+       startDate = Format(startDate, "yyyymmdd") 'Reformate to mathamatical version
+
+       'Get last date row on sheet
+       lastRow = ws.Cells(Rows.Count, dateColumn).End(xlUp).Row '2 depicts column 2 aka "B"
+
+        'Find the first and last rows that fall within the date range
+        For i = 7 To lastRow 'Look at all dates in spreadsheet
+
+            'Get date from cell in yyyymmdd format to compare
+            cellDate = ws.Range("B" & i).Value
+            DateArray = Split(cellDate, "/")
+            cellDate = (DateArray(2) * 10000) 'Put year into yyyymmdd position
+            cellDate = cellDate + (DateArray(0) * 100) 'Put year into yyyymmdd position
+            cellDate = cellDate + (DateArray(1) * 1) 'Put year into yyyymmdd position
+
+            'Find first and last cells that are in range
+            If cellDate >= startDate And cellDate <= endDate Then
+                InRangeCount = InRangeCount + 1 'Counter for cells in range
+
+                'Get row number for first cell in range
+                If InRangeCount = 1 Then
+                    FirstInRange = i 'Get row number for first transaction in the date range
+                End If
+            End If
+        Next i
+
+        'Calculate last row in date range
+        LastInRange = (InRangeCount + FirstInRange - 1) 'Get row number for last transaction in the date range
+
+        'Set range variable for expending and income for use in formulas
+        'If (LastInRange >= 0) Then
+        Set expendRng = ws.Range(ws.Cells(FirstInRange, expendColumn), ws.Cells(LastInRange, expendColumn))
+        'End If
+        'Set incomeRng = WS.Range(WS.Cells(FirstInRange, incomeColumn), WS.Cells(LastInRange, incomeColumn))
+        'Set catagoryRng = WS.Range(WS.Cells(FirstInRange, categoryColumn), WS.Cells(LastInRange, categoryColumn))
+
+        'Return value
+        Set FindExpendRange = expendRng
+
+End Function
+
+
+Function FindIncomeRange(ByRef expendRng As Range, ByRef incomeRng As Range, ByRef categoryRng As Range, ByVal categoryColumn As Long, ByVal dateColumn As Long, ByVal expendColumn As Long, ByVal incomeColumn As Long, ByRef ws As Worksheet, ByVal monthsBack As Integer) As Range
+
+       'Declarations
+       Dim i As Integer 'Loop increment
+       Dim InRangeCount As Long
+       Dim cellDate As String 'Date each cell contains
+       Dim FirstInRange As Long 'First row transaction that falls into the subs date range
+            FirstInRange = 0 'Initialize for error prevention
+       Dim LastInRange As Long 'Last row transaction that falls into the subs date range
+            LastInRange = 0 'Initialize for error prevention
+       Dim startDate As String 'Sub first date to look at
+       Dim endDate As String 'Sub last date to look at
+       Dim DateArray As Variant 'Stores split string results to form yyyymmdd date format for each transaction
+       Dim lastRow As Long 'Last row that contains a transaction
+
+       'Find range of data with correct date range
+       endDate = Format(Date, "yyyymmdd") 'Reformate to mathamatical version for end date
+       startDate = DateAdd("m", (-1 * monthsBack), Date) 'Subtract one month for start date
+       startDate = Format(startDate, "yyyymmdd") 'Reformate to mathamatical version
+
+       'Get last date row on sheet
+       lastRow = ws.Cells(Rows.Count, dateColumn).End(xlUp).Row '2 depicts column 2 aka "B"
+
+        'Find the first and last rows that fall within the date range
+        For i = 7 To lastRow 'Look at all dates in spreadsheet
+
+            'Get date from cell in yyyymmdd format to compare
+            cellDate = ws.Range("B" & i).Value
+            DateArray = Split(cellDate, "/")
+            cellDate = (DateArray(2) * 10000) 'Put year into yyyymmdd position
+            cellDate = cellDate + (DateArray(0) * 100) 'Put year into yyyymmdd position
+            cellDate = cellDate + (DateArray(1) * 1) 'Put year into yyyymmdd position
+
+            'Find first and last cells that are in range
+            If cellDate >= startDate And cellDate <= endDate Then
+                InRangeCount = InRangeCount + 1 'Counter for cells in range
+
+                'Get row number for first cell in range
+                If InRangeCount = 1 Then
+                    FirstInRange = i 'Get row number for first transaction in the date range
+                End If
+            End If
+        Next i
+
+        'Calculate last row in date range
+        LastInRange = (InRangeCount + FirstInRange - 1) 'Get row number for last transaction in the date range
+
+        'Set range variable for expending and income for use in formulas
+        'Set expendRng = WS.Range(WS.Cells(FirstInRange, expendColumn), WS.Cells(LastInRange, expendColumn))
+        'If (LastInRange >= 0) Then
+        Set incomeRng = ws.Range(ws.Cells(FirstInRange, incomeColumn), ws.Cells(LastInRange, incomeColumn))
+        'End If
+        'Set catagoryRng = WS.Range(WS.Cells(FirstInRange, categoryColumn), WS.Cells(LastInRange, categoryColumn))
+
+        'Return value
+        Set FindIncomeRange = incomeRng
+
+End Function
+
+
+Function FindCategoryRange(ByRef expendRng As Range, ByRef incomeRng As Range, ByRef categoryRng As Range, ByVal categoryColumn As Long, ByVal dateColumn As Long, ByVal expendColumn As Long, ByVal incomeColumn As Long, ByRef ws As Worksheet, ByVal monthsBack As Integer) As Range
+
+       'Declarations
+       Dim i As Integer 'Loop increment
+       Dim InRangeCount As Long
+       Dim cellDate As String 'Date each cell contains
+       Dim FirstInRange As Long 'First row transaction that falls into the subs date range
+            FirstInRange = 0 'Initialize for error prevention
+       Dim LastInRange As Long 'Last row transaction that falls into the subs date range
+            LastInRange = 0 'Initialize for error prevention
+       Dim startDate As String 'Sub first date to look at
+       Dim endDate As String 'Sub last date to look at
+       Dim DateArray As Variant 'Stores split string results to form yyyymmdd date format for each transaction
+       Dim lastRow As Long 'Last row that contains a transaction
+
+       'Find range of data with correct date range
+       endDate = Format(Date, "yyyymmdd") 'Reformate to mathamatical version for end date
+       startDate = DateAdd("m", (-1 * monthsBack), Date) 'Subtract one month for start date
+       startDate = Format(startDate, "yyyymmdd") 'Reformate to mathamatical version
+
+       'Get last date row on sheet
+       lastRow = ws.Cells(Rows.Count, dateColumn).End(xlUp).Row '2 depicts column 2 aka "B"
+
+        'Find the first and last rows that fall within the date range
+        For i = 7 To lastRow 'Look at all dates in spreadsheet
+
+            'Get date from cell in yyyymmdd format to compare
+            cellDate = ws.Range("B" & i).Value
+            DateArray = Split(cellDate, "/")
+            cellDate = (DateArray(2) * 10000) 'Put year into yyyymmdd position
+            cellDate = cellDate + (DateArray(0) * 100) 'Put year into yyyymmdd position
+            cellDate = cellDate + (DateArray(1) * 1) 'Put year into yyyymmdd position
+
+            'Find first and last cells that are in range
+            If cellDate >= startDate And cellDate <= endDate Then
+                InRangeCount = InRangeCount + 1 'Counter for cells in range
+
+                'Get row number for first cell in range
+                If InRangeCount = 1 Then
+                    FirstInRange = i 'Get row number for first transaction in the date range
+                End If
+            End If
+        Next i
+
+        'Calculate last row in date range
+        LastInRange = (InRangeCount + FirstInRange - 1) 'Get row number for last transaction in the date range
+
+        'Set range variable for expending and income for use in formulas
+        'Set expendRng = WS.Range(WS.Cells(FirstInRange, expendColumn), WS.Cells(LastInRange, expendColumn))
+        'Set incomeRng = WS.Range(WS.Cells(FirstInRange, incomeColumn), WS.Cells(LastInRange, incomeColumn))
+        'If (LastInRange >= 0) Then
+        Set catagoryRng = ws.Range(ws.Cells(FirstInRange, categoryColumn), ws.Cells(LastInRange, categoryColumn))
+        'End If
+
+        'Return value
+        Set FindCategoryRange = catagoryRng
+
+End Function

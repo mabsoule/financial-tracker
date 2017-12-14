@@ -1,0 +1,10 @@
+Sub Button7_Click()
+
+    'Format Cells Color
+    Range("A7:C10000").Interior.Color = RGB(255, 255, 255)
+    Range("G7:Z10000").Interior.Color = RGB(255, 255, 255)
+    Range("D7:D10000").Interior.Color = RGB(255, 126, 121)
+    Range("E7:E10000").Interior.Color = RGB(83, 219, 126)
+    Range("F7:F10000").Interior.Color = RGB(0, 176, 240)
+
+End Sub
